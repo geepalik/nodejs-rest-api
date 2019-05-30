@@ -91,5 +91,3 @@ app.use(function(req, res, next){
         message: 'Route '+req.url+' not found'
     })
 });
-
-//app.listen(8080);

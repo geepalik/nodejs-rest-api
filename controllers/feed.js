@@ -6,9 +6,19 @@ const { validationResult } = require('express-validator/check');
 const Post = require('../models/post');
 
 exports.getPosts = (req, res, next) => {
-    Post.find()
+    const currentPage = req.query.page || 1;
+    const perPage = 2;
+    let totalItems;
+
+    Post.find().countDocuments()
+    .then(count => {
+        totalItems = count;
+        return Post.find().skip(calculateItemsToSkip(currentPage, perPage)).limit(perPage);
+    })
     .then(posts => {
-        res.status(200).json({message: 'Fetch posts ok', posts: posts});
+        res
+        .status(200)
+        .json({message: 'Fetch posts ok', posts: posts, totalItems: totalItems, postsPerPage: perPage});
     })
     .catch(err => {
         if(!err.statusCode){
@@ -16,23 +26,6 @@ exports.getPosts = (req, res, next) => {
         }
         next(err);
     });
-    //test with dummy data
-    /*
-    res.status(200).json({
-        posts:[
-            {
-                _id: 1,
-                title: 'First post', 
-                content: 'This is the first post', 
-                imageUrl:'images/gum.jpg',
-                creator: {
-                    name: 'Maximilian'
-                },
-                createdAt: new Date()
-            }
-        ]
-    });
-    */
 };
 
 exports.createPost = (req, res, next) => {
@@ -41,17 +34,8 @@ exports.createPost = (req, res, next) => {
         const error = new Error('Validation failed, entered data incorrect');
         error.statusCode = 422;
         throw error;
-        //return manual function
-        /*
-        return res
-        .status(422)
-        .json({
-            message: 'Validation failed, entered data incorrect',
-            errors: errors.array()
-        });
-        */
     }
-    
+
     if(!req.file){
         const error = new Error('No image provided');
         error.statusCode = 422;
@@ -202,6 +186,13 @@ exports.deletePost = (req, res, next) => {
         next(err);
     })
 };
+
+/**
+ * calculate from which item and after to return
+ */
+const calculateItemsToSkip = (currentPage, itemsPerPage) => {
+    return (currentPage - 1) * itemsPerPage
+}
 
 /**
  * delete previous image
