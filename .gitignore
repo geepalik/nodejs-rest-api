@@ -1,3 +1,4 @@
 node_modules
 launch.json
 images/*
+.vscode/tasks.json
