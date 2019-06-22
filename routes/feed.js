@@ -39,7 +39,6 @@ router.delete('/post/:postId', feedController.deletePost);
 
 //new routes:
 //logging user in
-//signing up
 //viewing status of user
 //editing status of user
 
