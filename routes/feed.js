@@ -10,7 +10,7 @@ router.get('/posts', isAuth, feedController.getPosts);
 //POST /feed/post
 //use express validator for title and content fields
 //we do image validation in the controller
-router.post('/post', [
+router.post('/post', isAuth, [
     body('title')
     .trim()
     .isLength({min: 5}),
@@ -21,11 +21,11 @@ router.post('/post', [
 feedController.createPost);
 
 //get single post
-router.get('/post/:postId', feedController.getPost);
+router.get('/post/:postId', isAuth, feedController.getPost);
 
 //edit single post
 router.put(
-    '/post/:postId', [
+    '/post/:postId', isAuth, [
     body('title') 
         .trim()
         .isLength({min: 5}),
@@ -36,7 +36,7 @@ router.put(
     feedController.updatePost
 );
 
-router.delete('/post/:postId', feedController.deletePost);
+router.delete('/post/:postId', isAuth, feedController.deletePost);
 
 //new routes:
 //viewing status of user
