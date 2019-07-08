@@ -119,6 +119,9 @@ exports.getPost = (req, res, next) => {
     });
 };
 
+/**
+ * a logged in user can only update his/her posts
+ */
 exports.updatePost = (req, res, next) => {
     const postId = req.params.postId;
     const errors = validationResult(req);
@@ -148,6 +151,11 @@ exports.updatePost = (req, res, next) => {
         if(!post){
             const error = new Error('Could not find post');
             error.statusCode = 404;
+            throw error;
+        }
+        if(!post.creator || post.creator.toString() !== req.userId){
+            const error = new Error('Not authorized!');
+            error.statusCode = 403;
             throw error;
         }
         if(imageUrl !== post.imageUrl){
@@ -181,7 +189,11 @@ exports.deletePost = (req, res, next) => {
             error.statusCode = 404;
             throw error;
         }
-        //TODO check logged in user 
+        if(!post.creator || post.creator.toString() !== req.userId){
+            const error = new Error('Not authorized!');
+            error.statusCode = 403;
+            throw error;
+        } 
         clearImage(post.imageUrl);
         return Post.findByIdAndRemove(postId);
     })
