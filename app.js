@@ -40,6 +40,9 @@ const fileFilter = (req, file, cb) => {
     }
 }
 
+//use: like $_REQUEST in PHP
+//router.get('*', feedController.notFound);
+
 //x-www-form-urlencoded <form>
 //app.request(bodyParser.urlencoded());
 

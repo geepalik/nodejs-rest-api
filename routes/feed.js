@@ -38,12 +38,4 @@ router.put(
 
 router.delete('/post/:postId', isAuth, feedController.deletePost);
 
-//new routes:
-//viewing status of user
-//editing status of user
-
-
-//use: like $_REQUEST in PHP
-//router.get('*', feedController.notFound);
-
 module.exports = router;
