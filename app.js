@@ -8,6 +8,8 @@ const authRoutes = require('./routes/auth');
 const multer = require('multer');
 const uuidv4 = require('uuid/v4');
 
+const port = process.env.PORT || 8080;
+
 const fileStorage = multer.diskStorage({
     //request object
     //information on the file
@@ -85,7 +87,7 @@ mongoose.connect(
     )
     .then(result => {
         console.log('mongodb connection ok');
-        app.listen(8080);
+        app.listen(port);
     })
     .catch(err => console.log('mongodb connection error: '+err));
 ;
